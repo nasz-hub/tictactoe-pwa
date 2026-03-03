@@ -2,9 +2,29 @@
 
 A complete, production-ready Tic Tac Toe Progressive Web App (PWA) in a single HTML file.
 
-## 🚀 Live Deployment
+## 🚀 Deployment Status
 
-**GitHub Pages URL:** https://nasz-hub.github.io/tictactoe-pwa/
+### GitHub Pages (Requires Manual Setup)
+
+The GitHub Actions workflow is configured but requires manual enabling:
+
+1. Go to: https://github.com/nasz-hub/tictactoe-pwa/settings/pages
+2. Under "Build and deployment" > "Source", select **GitHub Actions**
+3. The workflow will automatically deploy on the next push
+
+**Expected URL:** `https://nasz-hub.github.io/tictactoe-pwa/`
+
+### Alternative: Netlify Drag-and-Drop (Easiest)
+
+1. Go to https://app.netlify.com/drop
+2. Drag and drop the `c:/dev/pwa/1tictactoe` folder (or the `index.html` file)
+3. Your site will be deployed instantly with a free URL
+
+### Alternative: Vercel
+
+1. Install Vercel CLI: `npm i -g vercel`
+2. Run `vercel` in the project directory
+3. Follow the prompts to deploy
 
 ## Files Delivered
 
