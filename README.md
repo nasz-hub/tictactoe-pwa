@@ -2,6 +2,10 @@
 
 A complete, production-ready Tic Tac Toe Progressive Web App (PWA) in a single HTML file.
 
+## 🚀 Live Deployment
+
+**GitHub Pages URL:** https://nasz-hub.github.io/tictactoe-pwa/
+
 ## Files Delivered
 
 1. **`index.html`** - Complete single-file PWA (~42KB, well under 100KB target)
