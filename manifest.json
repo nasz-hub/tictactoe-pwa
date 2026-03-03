@@ -1,0 +1,16 @@
+{
+  "short_name": "Tic Tac Toe Pro",
+  "name": "Tic Tac Toe - Ultimate Edition",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%23000000'/%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='8'%3E%3Cline x1='56' y1='32' x2='56' y2='160'/%3E%3Cline x1='96' y1='32' x2='96' y2='160'/%3E%3Cline x1='136' y1='32' x2='136' y2='160'/%3E%3Cline x1='32' y1='56' x2='160' y2='56'/%3E%3Cline x1='32' y1='96' x2='160' y2='96'/%3E%3Cline x1='32' y1='136' x2='160' y2='136'/%3E%3C/g%3E%3Ctext x='42' y='52' fill='%23ff4444' font-size='24' font-weight='bold'%3EX%3C/text%3E%3Ctext x='132' y='52' fill='%234444ff' font-size='24' font-weight='bold'%3EO%3C/text%3E%3C/svg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

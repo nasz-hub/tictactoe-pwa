@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="Tic Tac Toe PWA - Play against friend or unbeatable AI">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tic Tac Toe Pro">
+  
+  <!-- PWA Manifest Configuration -->
+  <!--
+  {
+    "short_name": "Tic Tac Toe Pro",
+    "name": "Tic Tac Toe - Ultimate Edition",
+    "icons": [{ "src": "data:image/svg+xml,...", "sizes": "any" }],
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
+  }
+  -->
+  <link rel="manifest" href="data:application/manifest+json,%7B%22short_name%22%3A%22Tic%20Tac%20Toe%20Pro%22%2C%22name%22%3A%22Tic%20Tac%20Toe%20-%20Ultimate%20Edition%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20192%20192%27%253E%253Crect%20width%3D%27192%27%20height%3D%27192%27%20rx%3D%2724%27%20fill%3D%27%23000000%27%2F%253E%253Cg%20fill%3D%27none%27%20stroke%3D%27%23ffffff%27%20stroke-width%3D%278%27%253E%253Cline%20x1%3D%2756%27%20y1%3D%2732%27%20x2%3D%2756%27%20y2%3D%27160%27%2F%253E%253Cline%20x1%3D%2796%27%20y1%3D%2732%27%20x2%3D%2796%27%20y2%3D%27160%27%2F%253E%253Cline%20x1%3D%27136%27%20y1%3D%2732%27%20x2%3D%27136%27%20y2%3D%27160%27%2F%253E%253Cline%20x1%3D%2732%27%20y1%3D%2756%27%20x2%3D%27160%27%20y2%3D%2756%27%2F%253E%253Cline%20x1%3D%2732%27%20y1%3D%2796%27%20x2%3D%27160%27%20y2%3D%2796%27%2F%253Cline%20x1%3D%2732%27%20y1%3D%27136%27%20x2%3D%27160%27%20y2%3D%27136%27%2F%253E%253C%2Fg%253E%253Ctext%20x%3D%2742%27%20y%3D%2752%27%20fill%3D%27%23ff4444%27%20font-size%3D%2724%27%20font-weight%3D%27bold%27%3EX%3C%2Ftext%3E%253Ctext%20x%3D%27132%27%20y%3D%2752%27%20fill%3D%27%234444ff%27%20font-size%3D%2724%27%20font-weight%3D%27bold%27%3EO%3C%2Ftext%3E%253C%2Fsvg%3E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22theme_color%22%3A%22%23000000%22%2C%22background_color%22%3A%22%23ffffff%22%7D">
+  
+  <title>Tic Tac Toe Pro</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#000;--fg:#fff;--glass:rgba(255,255,255,.1);--glassB:rgba(255,255,255,.2);--x:#ff4444;--o:#4444ff;--h:rgba(255,255,255,.06);--h2:rgba(255,255,255,.15)}
+    [data-theme=light]{--bg:#f5f5f5;--fg:#111;--glass:rgba(255,255,255,.8);--glassB:rgba(0,0,0,.1);--x:#e74c3c;--o:#3498db;--h:rgba(0,0,0,.05);--h2:rgba(0,0,0,.12)}
+    html{font-size:16px;-webkit-tap-highlight-color:transparent}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;padding:16px;transition:background .3s,color .3s;overflow-x:hidden}
+    body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:radial-gradient(circle at 20% 80%,rgba(255,68,68,.08) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(68,68,255,.08) 0%,transparent 50%),radial-gradient(circle at 50% 50%,rgba(128,128,128,.05) 0%,transparent 70%);pointer-events:none;z-index:-1}
+    .glass{background:var(--glass);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glassB);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.1)}
+    .app{width:100%;max-width:380px;display:flex;flex-direction:column;gap:12px}
+    .header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
+    .title{font-size:1.4rem;font-weight:700;background:linear-gradient(135deg,var(--x),var(--o));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;border:none;border-radius:10px;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;background:var(--glass);color:var(--fg);border:1px solid var(--glassB);min-height:44px;min-width:44px}
+    .btn:hover{background:var(--h2);transform:translateY(-1px)}
+    .btn:active{transform:scale(.98)}
+    .btn-primary{background:var(--o);color:#fff;border-color:var(--o)}
+    .btn-icon{padding:10px;font-size:1.1rem}
+    .mode{display:flex;gap:8px;padding:8px}
+    .mode-btn{flex:1;padding:12px;text-align:center;border-radius:10px;cursor:pointer;transition:all .2s;background:transparent;border:1px solid var(--glassB);color:rgba(255,255,255,.7);font-weight:500;min-height:44px}
+    .mode-btn.active{background:var(--o);color:#fff;border-color:var(--o)}
+    [data-theme=light] .mode-btn.active{color:#fff}
+    .score{display:flex;justify-content:space-around;padding:14px;gap:10px}
+    .score-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+    .score-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;opacity:.7}
+    .score-value{font-size:1.4rem;font-weight:700}
+    .score-value.x{color:var(--x)}.score-value.o{color:var(--o)}.score-value.d{opacity:.5}
+    .board{padding:16px}
+    .game{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;aspect-ratio:1;max-width:320px;margin:0 auto}
+    .cell{display:flex;align-items:center;justify-content:center;font-size:clamp(2.2rem,9vw,3.5rem);font-weight:700;cursor:pointer;border-radius:12px;background:var(--h);border:2px solid transparent;transition:all .2s;user-select:none;-webkit-user-select:none;min-height:70px}
+    .cell:hover:not(.taken){background:var(--h2);border-color:var(--glassB)}
+    .cell.taken{cursor:default}
+    .cell.x{color:var(--x)}.cell.o{color:var(--o)}
+    .cell.win{background:rgba(68,68,255,.15);border-color:var(--o);animation:.6s ease infinite alternate winner}
+    @keyframes winner{from{box-shadow:0 0 10px rgba(68,68,255,.3)}to{box-shadow:0 0 20px rgba(68,68,255,.6)}}
+    .cell.pop{animation:.3s cubic-bezier(.68,-.55,.265,1.55) pop}
+    @keyframes pop{0%{transform:scale(0);opacity:0}50%{transform:1.2}100%{transform:scale(1);opacity:1}}
+    .status{text-align:center;padding:8px;font-size:1rem;font-weight:500;opacity:.8;min-height:40px;display:flex;align-items:center;justify-content:center}
+    .status .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;animation:1s ease infinite pulse}
+    .status .dot.x{background:var(--x)}.status .dot.o{background:var(--o)}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:.9}}
+    .controls{display:flex;gap:8px;padding:8px}
+    .controls .btn{flex:1}
+    .history{padding:12px 16px;max-height:120px;overflow-y:auto}
+    .history-t{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;opacity:.7;margin-bottom:8px}
+    .history-l{display:flex;flex-wrap:wrap;gap:6px}
+    .history-m{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px;background:var(--h);font-size:.75rem;opacity:.8}
+    .history-m .p{font-weight:700}
+    .history-m .p.x{color:var(--x)}.history-m .p.o{color:var(--o)}
+    .modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;visibility:hidden;transition:all .25s}
+    .modal.show{opacity:1;visibility:visible}
+    .modal-content{background:var(--bg);border:1px solid var(--glassB);border-radius:20px;padding:28px;text-align:center;max-width:280px;width:90%;transform:scale(.9);transition:transform .25s}
+    .modal.show .modal-content{transform:scale(1)}
+    .modal-t{font-size:1.4rem;font-weight:700;margin-bottom:8px}
+    .modal-t.x{color:var(--x)}.modal-t.o{color:var(--o)}.modal-t.d{opacity:.7}
+    .modal-msg{opacity:.7;margin-bottom:20px}
+    .modal .btn{width:100%}
+    .on,.off{display:none}
+    .sound-on .off{display:none}.sound-on .on{display:inline}
+    .sound-off .on{display:none}.sound-off .off{display:inline}
+    @media(min-width:481px){.game{gap:10px}.cell{border-radius:16px}}
+    @media(min-width:769px){body{padding:24px}.app{max-width:420px}}
+    ::-webkit-scrollbar{width:5px}
+    ::-webkit-scrollbar-track{background:transparent}
+    ::-webkit-scrollbar-thumb{background:var(--glassB);border-radius:3px}
+    .fade{animation:.3s ease fade}
+    @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="app glass">
+    <header class="header glass">
+      <h1 class="title">Tic Tac Toe Pro</h1>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-icon" id="themeBtn" aria-label="Toggle theme">🌙</button>
+        <button class="btn btn-icon sound-off" id="soundBtn" aria-label="Toggle sound"><span class="on">🔊</span><span class="off">🔇</span></button>
+      </div>
+    </header>
+    <nav class="mode glass">
+      <button class="mode-btn active" data-mode="pvp">👥 vs Player</button>
+      <button class="mode-btn" data-mode="pvai">🤖 vs AI</button>
+    </nav>
+    <section class="score glass">
+      <div class="score-item"><span class="score-label">Player X</span><span class="score-value x" id="sX">0</span></div>
+      <div class="score-item"><span class="score-label">Draws</span><span class="score-value d" id="sD">0</span></div>
+      <div class="score-item"><span class="score-label">Player O</span><span class="score-value o" id="sO">0</span></div>
+    </section>
+    <main class="board glass">
+      <div class="game" id="board">
+        <div class="cell" data-i="0"></div><div class="cell" data-i="1"></div><div class="cell" data-i="2"></div>
+        <div class="cell" data-i="3"></div><div class="cell" data-i="4"></div><div class="cell" data-i="5"></div>
+        <div class="cell" data-i="6"></div><div class="cell" data-i="7"></div><div class="cell" data-i="8"></div>
+      </div>
+    </main>
+    <div class="status" id="status"><span class="dot x"></span>Player X's turn</div>
+    <div class="controls">
+      <button class="btn" id="undoBtn">↩️ Undo</button>
+      <button class="btn btn-primary" id="resetBtn">🔄 New Game</button>
+    </div>
+    <aside class="history glass">
+      <div class="history-t">Move History</div>
+      <div class="history-l" id="history"><span style="opacity:.6;font-size:.8rem">No moves yet</span></div>
+    </aside>
+  </div>
+  <div class="modal" id="modal">
+    <div class="modal-content glass">
+      <h2 class="modal-t" id="modalT">Player X Wins!</h2>
+      <p class="modal-msg" id="modalM">Congratulations!</p>
+      <button class="btn btn-primary" id="modalBtn">Play Again</button>
+    </div>
+  </div>
+
+  <!-- TWA Deployment Guide
+  ============================================
+  
+  BUBBLEWRAP CLI COMMANDS:
+  ------------------------
+  1. Install Bubblewrap:
+     npm install -g @bubblewrap/cli
+  
+  2. Initialize project (using your deployed URL):
+     bubblewrap init --manifest https://your-domain.com/manifest.json
+  
+  3. Build debug APK:
+     bubblewrap build
+  
+  4. Build release APK:
+     bubblewrap build --release
+  
+  5. Sign the APK (using keytool):
+     keytool -genkey -v -keystore my-key.keystore -alias my-app -keyalg RSA -keysize 2048 -validity 10000
+  
+  6. Sign APK with jarsigner:
+     jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 -keystore my-key.keystore my-app.apk my-app
+  
+  DIGITAL ASSET LINKS SETUP:
+  -------------------------
+  1. Create assetlinks.json file on your domain:
+     https://your-domain.com/.well-known/assetlinks.json
+  
+  2. Content format:
+     [
+       {
+         "relation": ["delegate_permission/common.handle_all_urls"],
+         "target": {
+           "namespace": "android_app",
+           "package_name": "com.example.tictactoe",
+           "sha256_cert_fingerprints": ["YOUR_CERT_FINGERPRINT"]
+         }
+       }
+     ]
+  
+  3. Get SHA256 fingerprint:
+     keytool -list -v -keystore my-key.keystore -alias my-app
+  
+  4. Deploy to Google Play Console and add Digital Asset Links
+  
+  ALTERNATIVE - PWA BUILDER:
+  ---------------------------
+  1. Deploy index.html to HTTPS URL
+  2. Visit https://pwabuilder.com
+  3. Enter your URL
+  4. Download generated Android APK
+  5. Sign and upload to Play Console
+  ============================================
+  -->
+
+  <script>
+    // ===== CONSTANTS =====
+    const WINS=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    const P={X:'X',O:'O'},KEY='ttt_state';
+
+    // ===== AUDIO =====
+    class Audio{
+      constructor(){this.e=true;this.i=false}
+      init(){if(this.i)return;try{this.c=new(window.AudioContext||window.webkitAudioContext)();this.i=true}catch(e){this.e=false}}
+      play(freq,len,vol=0.15){if(!this.e||!this.c)return;if(this.c.state==='suspended')this.c.resume();const o=this.c.createOscillator(),g=this.c.createGain();o.connect(g);g.connect(this.c.destination);o.frequency.value=freq;g.gain.setValueAtTime(vol,this.c.currentTime);g.gain.exponentialRampToValueAtTime(0.01,this.c.currentTime+len);o.start();o.stop(this.c.currentTime+len)}
+      move(){this.play(800,0.12,0.12)}
+      win(){[523,659,784].forEach((n,i)=>setTimeout(()=>this.play(n,0.18,0.2),i*100))}
+      draw(){this.play(400,0.25,0.15);setTimeout(()=>this.play(350,0.25,0.15),150)}
+      undo(){this.play(600,0.06,0.12);setTimeout(()=>this.play(500,0.06,0.12),50)}
+      toggle(){this.e=!this.e;return this.e}
+    }
+
+    // ===== STORAGE =====
+    const Store={
+      save(s){try{localStorage.setItem(KEY,JSON.stringify(s))}catch(e){}},
+      load(){try{return JSON.parse(localStorage.getItem(KEY))}catch(e){return null}},
+      clear(){try{localStorage.removeItem(KEY)}catch(e){}}
+    };
+
+    // ===== MINIMAX AI =====
+    const AI={
+      getBestMove(b,ai=P.O){
+        const hp=ai===P.X?P.O:P.X;
+        let best=-Infinity,move=this.moves(b)[0];
+        for(const m of this.moves(b)){b[m]=ai;const s=this.minimax(b,0,-Infinity,false,ai,hp);b[m]=null;if(s>best){best=s;move=m}}
+        return move
+      },
+      minimax(b,d,a,max,ai,hp){
+        if(this.winner(b,ai))return 10-d;
+        if(this.winner(b,hp))return d-10;
+        if(this.draw(b))return 0;
+        const ms=this.moves(b);
+        if(max){let e=-Infinity;for(const m of ms){b[m]=ai;e=Math.max(e,this.minimax(b,d+1,a,true,ai,hp));b[m]=null;a=Math.max(a,e);if(a<=-a)break}return e}
+        let e=Infinity;for(const m of ms){b[m]=hp;e=Math.min(e,this.minimax(b,d+1,a,false,ai,hp));b[m]=null;a=Math.min(a,e);if(a>=a)break}return e
+      },
+      winner(b,p){return WINS.some(l=>l.every(i=>b[i]===p))},
+      draw(b){return b.every(c=>c!==null)},
+      moves(b){return b.map((c,i)=>c===null?i:-1).filter(i=>i!==-1)},
+      winLine(b){for(const l of WINS){const[a,b_,c]=l;if(b[a]&&b[a]===b_&&b[a]===c)return l}return null}
+    };
+
+    // ===== GAME ENGINE =====
+    class Game{
+      constructor(){
+        this.b=Array(9).fill(null);
+        this.cur=P.X;
+        this.m='pvp';
+        this.a=true;
+        this.w=null;
+        this.wl=null;
+        this.sc={x:0,o:0,d:0};
+        this.h=[];
+        this.aud=new Audio();
+        this.c=document.querySelectorAll('.cell');
+        this.sX=document.getElementById('sX'),this.sO=document.getElementById('sO'),this.sD=document.getElementById('sD');
+        this.st=document.getElementById('status');
+        this.hist=document.getElementById('history');
+        this.md=document.getElementById('modal');
+        this.init()
+      }
+
+      init(){
+        const s=Store.load();
+        if(s)this.restore(s);
+        this.evt();
+        this.rend();
+        this.sw()
+      }
+
+      evt(){
+        this.c.forEach(c=>c.addEventListener('click',e=>this.click(e),{passive:true}));
+        document.querySelectorAll('.mode-btn').forEach(b=>b.addEventListener('click',e=>this.setMode(e.target.dataset.mode),{passive:true}));
+        document.getElementById('undoBtn').addEventListener('click',()=>this.undo(),{passive:true});
+        document.getElementById('resetBtn').addEventListener('click',()=>this.reset(),{passive:true});
+        document.getElementById('modalBtn').addEventListener('click',()=>this.closeModal(),{passive:true});
+        this.md.addEventListener('click',e=>{if(e.target===this.md)this.closeModal()});
+        document.getElementById('themeBtn').addEventListener('click',()=>this.theme(),{passive:true});
+        document.getElementById('soundBtn').addEventListener('click',()=>this.sound(),{passive:true});
+        document.addEventListener('click',()=>this.aud.init(),{once:true})
+      }
+
+      click(e){
+        this.aud.init();
+        const i=parseInt(e.target.dataset.i);
+        if(!this.a||this.b[i]!==null)return;
+        this.move(i)
+      }
+
+      move(i){
+        this.b[i]=this.cur;
+        this.h.push({i,player:this.cur});
+        this.aud.move();
+        if(AI.winner(this.b,this.cur)){this.a=false;this.w=this.cur;this.wl=AI.winLine(this.b);this.sc[this.w.toLowerCase()]++;this.aud.win();this.end(this.w)}
+        else if(AI.draw(this.b)){this.a=false;this.sc.d++;this.aud.draw();this.end(null)}
+        else{this.cur=this.cur===P.X?P.O:P.X;if(this.m==='pvai'&&this.cur===P.O)this.ai()}
+        this.save();this.rend()
+      }
+
+      ai(){
+        requestAnimationFrame(()=>{
+          const bm=AI.getBestMove(this.b,P.O);
+          this.move(bm)
+        })
+      }
+
+      undo(){
+        if(this.h.length===0)return;
+        const u=this.m==='pvai'?2:1;
+        for(let i=0;i<u&&this.h.length;i++){this.h.pop();this.b[this.h.length?this.h[this.h.length-1].i:this.h.length]=null}
+        this.a=true;this.w=null;this.wl=null;this.cur=P.X;
+        this.aud.undo();this.save();this.rend()
+      }
+
+      reset(){
+        this.b=Array(9).fill(null);this.cur=P.X;this.a=true;this.w=null;this.wl=null;this.h=[];
+        this.closeModal();this.save();this.rend()
+      }
+
+      setMode(m){
+        this.m=m;
+        document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
+        if(m==='pvai'&&this.cur===P.O&&this.a)this.reset();
+        this.save();this.rend()
+      }
+
+      theme(){
+        const l=document.body.getAttribute('data-theme')!=='light';
+        document.body.setAttribute('data-theme',l?'light':'dark');
+        document.getElementById('themeBtn').textContent=l?'☀️':'🌙'
+      }
+
+      sound(){
+        const en=this.aud.toggle();
+        document.getElementById('soundBtn').className=en?'btn btn-icon sound-on':'btn btn-icon sound-off'
+      }
+
+      end(w){
+        const t=document.getElementById('modalT'),m=document.getElementById('modalM');
+        if(w){t.textContent=`Player ${w} Wins!`;t.className=`modal-t ${w.toLowerCase()}`;m.textContent='Congratulations!'}
+        else{t.textContent="It's a Draw!";t.className='modal-t d';m.textContent='Well played!'}
+        this.md.classList.add('show')
+      }
+
+      closeModal(){this.md.classList.remove('show')}
+
+      rend(){
+        this.c.forEach((c,i)=>{
+          const v=this.b[i];
+          c.textContent=v||'';c.className='cell';
+          if(v)c.classList.add('taken',v.toLowerCase());
+          if(this.h.length&&this.h[this.h.length-1].i===i&&v)c.classList.add('pop');
+          if(this.wl&&this.wl.includes(i))c.classList.add('win');
+          if(!this.a)c.classList.add('taken')
+        });
+        if(this.a){
+          const ind=`<span class="dot ${this.cur.toLowerCase()}"></span>`;
+          const txt=this.m==='pvai'&&this.cur===P.O?"AI's turn":`Player ${this.cur}'s turn`;
+          this.st.innerHTML=ind+txt
+        }else{this.st.innerHTML=this.w?`Player ${this.w} wins!`:"It's a draw!"}
+        this.sX.textContent=this.sc.x;this.sO.textContent=this.sc.o;this.sD.textContent=this.sc.d;
+        if(this.h.length===0)this.hist.innerHTML='<span style="opacity:.6;font-size:.8rem">No moves yet</span>';
+        else this.hist.innerHTML=this.h.map((m,i)=>`<span class="history-m"><span class="p ${m.player.toLowerCase()}">${m.player}</span>#${i+1}</span>`).join('')
+      }
+
+      save(){
+        Store.save({b:this.b,cur:this.cur,m:this.m,sc:this.sc,h:this.h})
+      }
+
+      restore(s){
+        this.b=s.b||Array(9).fill(null);this.cur=s.cur||P.X;this.m=s.m||'pvp';this.sc=s.sc||{x:0,o:0,d:0};this.h=s.h||[];
+        if(this.b.some(c=>c!==null)){
+          if(AI.winner(this.b,P.X)){this.a=false;this.w=P.X;this.wl=AI.winLine(this.b)}
+          else if(AI.winner(this.b,P.O)){this.a=false;this.w=P.O;this.wl=AI.winLine(this.b)}
+          else if(AI.draw(this.b)){this.a=false}
+        }
+        document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===this.m))
+      }
+
+      sw(){
+        if(!('serviceWorker' in navigator))return;
+        const code=`const C='ttt-v1';const A=['./','./index.html'];self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(A)));self.skipWaiting()});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(k=>k!==C).map(k=>caches.delete(k)))));self.clients.claim()});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(f=>caches.open(C).then(c=>{c.put(e.request,f.clone());return f}))).catch(()=>caches.match('./index.html')))})`;
+        const b=new Blob([code],{type:'application/javascript'});
+        navigator.serviceWorker.register(URL.createObjectURL(b)).catch(()=>{})
+      }
+    }
+
+    new Game();
+  </script>
+</body>
+</html>
